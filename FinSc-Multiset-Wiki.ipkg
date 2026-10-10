@@ -1,0 +1,25 @@
+package FinSc-Multiset-Wiki
+version = 0.4.0
+authors = "Justin Kelly"
+brief   = "Verification executable for Layer 0a Ground Pure Constructive Multiset Algebra"
+opts    = "--codegen chez"
+
+depends = FinSc-Multiset, base, idris2-QuickCheck, linear
+sourcedir = "Library"
+
+modules = Wiki.BitGateChannelSpec,
+          Wiki.BoxIntAlgebraSpec,
+          Wiki.CoreMacroAudit,
+          Wiki.DependentMultisetSpec,
+          Wiki.FusedStreamAlgebraSpec,
+          Wiki.Generators,
+          Wiki.LinearResourceChannelSpec,
+          Wiki.Main,
+          Wiki.MonoidApplicativeAdjunctionSpec,
+          Wiki.MultisetAlgebraSpec,
+          Wiki.ScaleTransformSpec,
+          Wiki.TwoLevelTypeTheoryStagingSpec,
+          Wiki.ThreeLevelTypeTheoryStagingSpec
+
+main = Wiki.Main
+executable = multiset-wiki
