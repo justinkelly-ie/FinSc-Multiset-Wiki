@@ -5,6 +5,7 @@ import Stage0.Multiset
 import Stage0.BoxInt
 import Stage0.Singleton.Bit
 import Stage0.StreamPolynumber
+import Stage1.Polynumber
 import Wiki.CoreMacroAudit
 import Wiki.ScaleTransformSpec
 import Wiki.MultisetAlgebraSpec
@@ -99,6 +100,11 @@ main = do
                     Stage0.StreamPolynumber.auditStreamPolyCauchyProof &&
                     Stage0.StreamPolynumber.auditStreamPolyEddingtonScaleProof
   printTestResult "Sparse StreamPolynumber Algebra & Eddington k=38 Scale Invariants" pStreamPoly
+
+  let pPolyDuality = Stage1.Polynumber.auditPolySupportProof &&
+                     Stage1.Polynumber.auditPolyStreamRoundTripProof &&
+                     Stage1.Polynumber.auditPolyTreeEquivalenceProof
+  printTestResult "Polynumber Support, StreamPolynumber Round-Trip & BoxSpecTree Duality" pPolyDuality
 
   putStrLn "========================================================"
   putStrLn "  ✨ ALL FINSC-MULTISET KERNEL WITNESSES PASSED ✨  "
