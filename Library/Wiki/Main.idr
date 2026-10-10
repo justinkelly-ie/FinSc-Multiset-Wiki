@@ -4,6 +4,7 @@ import Stage0.Interfaces
 import Stage0.Multiset
 import Stage0.BoxInt
 import Stage0.Singleton.Bit
+import Stage0.StreamPolynumber
 import Wiki.CoreMacroAudit
 import Wiki.ScaleTransformSpec
 import Wiki.MultisetAlgebraSpec
@@ -92,6 +93,12 @@ main = do
 
   let p8 = Stage1.TypeTheory.TwoLevel.auditTwoLevelTypeTheoryProof
   printTestResult "Two-Level Type Theory (2LTT) Subfibration Stratification" p8
+
+  let pStreamPoly = Stage0.StreamPolynumber.auditStreamPolyDerivProof &&
+                    Stage0.StreamPolynumber.auditStreamPolyCaretProof &&
+                    Stage0.StreamPolynumber.auditStreamPolyCauchyProof &&
+                    Stage0.StreamPolynumber.auditStreamPolyEddingtonScaleProof
+  printTestResult "Sparse StreamPolynumber Algebra & Eddington k=38 Scale Invariants" pStreamPoly
 
   putStrLn "========================================================"
   putStrLn "  ✨ ALL FINSC-MULTISET KERNEL WITNESSES PASSED ✨  "
