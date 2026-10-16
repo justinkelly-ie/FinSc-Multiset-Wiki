@@ -68,6 +68,25 @@ prop_invertibleScaleTransformGaloisInversion x =
       f_upper = invertScaleTransform f_star
   in f_upper == x
 
+||| Property 8: DepScaleTransform Identity Law along certified CosmicDimension
+public export
+prop_depScaleTransformIdentity : BoxInt -> Bool
+prop_depScaleTransformIdentity x =
+  depScaleTransform {sourceDim = dimElliptic27} {targetDim = dimElliptic27} x == x
+
+||| Property 9: DepScaleTransform Functorial Composition Law
+public export
+prop_depScaleTransformComposition : BoxInt -> Bool
+prop_depScaleTransformComposition x =
+  composeDepScaleTransform {d1 = dimElliptic27} {d2 = dimElliptic27} {d3 = dimElliptic27} {b = BoxInt} x == x
+
+||| Property 10: InvertibleDepScaleTransform Roundtrip Law
+public export
+prop_invertibleDepScaleTransformRoundtrip : BoxInt -> Bool
+prop_invertibleDepScaleTransformRoundtrip x =
+  invertDepScaleTransform {sourceDim = dimElliptic27} {targetDim = dimElliptic27}
+    (depScaleTransform {sourceDim = dimElliptic27} {targetDim = dimElliptic27} {domainB = BoxInt} x) == x
+
 ||| QuickCheck suite execution for ScaleTransform specification
 public export
 auditScaleTransformProof : IO Bool
@@ -79,6 +98,11 @@ auditScaleTransformProof = do
   let r5 = qc2 prop_scaleTransformAdditiveHomomorphism
   let r6 = qc2 prop_scaleTransformScalarLinearity
   let r7 = qc prop_invertibleScaleTransformGaloisInversion
+  let r8 = qc prop_depScaleTransformIdentity
+  let r9 = qc prop_depScaleTransformComposition
+  let r10 = qc prop_invertibleDepScaleTransformRoundtrip
   pure (r1.pass == Just True && r2.pass == Just True && r3.pass == Just True &&
-        r4.pass == Just True && r5.pass == Just True && r6.pass == Just True && r7.pass == Just True)
+        r4.pass == Just True && r5.pass == Just True && r6.pass == Just True &&
+        r7.pass == Just True && r8.pass == Just True && r9.pass == Just True &&
+        r10.pass == Just True)
 ```
