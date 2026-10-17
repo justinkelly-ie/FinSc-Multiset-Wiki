@@ -30,6 +30,7 @@ import Stage0.Multiset
 import Stage0.BoxInt
 import Stage0.Interfaces
 import Stage0.OnSeq.FusedStream
+import Stage0.StructuralFuel
 import Data.Fuel
 import Data.Linear
 import Wiki.Generators
@@ -54,11 +55,11 @@ record VerifiedAdjunctionChannel where
   rightHom : Nat
   0 equivalencePrf : HomTensorEquivalenceWitness leftHom rightHom
 
-||| $O(1)$ allocation deforested multiset adjunction stream transducer using foldStreamNat
+||| $O(1)$ allocation deforested multiset adjunction stream transducer using foldStreamNat and model-indexed GohFuel
 public export
-fusedMultisetAdjunctionStream : Fuel -> List (Nat, Nat) -> Nat
-fusedMultisetAdjunctionStream f items =
-  foldStreamNat (length items) (\acc, (l, r) => acc + l + r) 0 (stream items)
+fusedMultisetAdjunctionStream : GohFuel cap -> List (Nat, Nat) -> Nat
+fusedMultisetAdjunctionStream fuel items =
+  foldStreamNat (gohSteps fuel) (\acc, (l, r) => acc + l + r) 0 (stream items)
 
 ||| Property 1: Multiset Applicative Identity Law (pure id <*> v == v)
 public export
@@ -124,7 +125,7 @@ auditMonoidApplicativeGaloisProof = do
   let r6 = qc prop_monoidGaloisFiberRoundtrip
   let r7 = qc prop_compMonoidGaloisComposition
   let r8 = qc prop_multisetFourPrimitives
-  let streamSum = fusedMultisetAdjunctionStream (limit 100) [(50, 50), (10, 10)]
+  let streamSum = fusedMultisetAdjunctionStream masterSubstrateGohFuelModel [(50, 50), (10, 10)]
   pure (r1.pass == Just True && r2.pass == Just True && r3.pass == Just True &&
         r4.pass == Just True && r5.pass == Just True && r6.pass == Just True &&
         r7.pass == Just True && r8.pass == Just True && streamSum == 120)
