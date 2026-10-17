@@ -87,6 +87,18 @@ prop_invertibleDepScaleTransformRoundtrip x =
   invertDepScaleTransform {sourceDim = dimElliptic27} {targetDim = dimElliptic27}
     (depScaleTransform {sourceDim = dimElliptic27} {targetDim = dimElliptic27} {domainB = BoxInt} x) == x
 
+||| Property 11: Canonical 4-Geometry Scale Transition: 27 Elliptic -> 128 Hyperbolic -> 55 Parabolic
+public export
+prop_canonical4GeometriesTransform : BoxInt -> Bool
+prop_canonical4GeometriesTransform x =
+  let input = mulBox (intToBoxInt 27) x
+      output = composeDepScaleTransform {d1 = dimElliptic27}
+                                        {d2 = dimHyperbolic128}
+                                        {d3 = dimParabolic55}
+                                        {b = BoxInt}
+                                        input
+  in output == mulBox (intToBoxInt 55) x
+
 ||| QuickCheck suite execution for ScaleTransform specification
 public export
 auditScaleTransformProof : IO Bool
@@ -101,8 +113,9 @@ auditScaleTransformProof = do
   let r8 = qc prop_depScaleTransformIdentity
   let r9 = qc prop_depScaleTransformComposition
   let r10 = qc prop_invertibleDepScaleTransformRoundtrip
+  let r11 = qc prop_canonical4GeometriesTransform
   pure (r1.pass == Just True && r2.pass == Just True && r3.pass == Just True &&
         r4.pass == Just True && r5.pass == Just True && r6.pass == Just True &&
         r7.pass == Just True && r8.pass == Just True && r9.pass == Just True &&
-        r10.pass == Just True)
+        r10.pass == Just True && r11.pass == Just True)
 ```

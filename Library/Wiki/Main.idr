@@ -6,6 +6,7 @@ import Stage0.BoxInt
 import Stage0.Singleton.Bit
 import Stage0.StreamPolynumber
 import Stage1.Polynumber
+import Stage1.MultisetTree
 import Wiki.CoreMacroAudit
 import Wiki.ScaleTransformSpec
 import Wiki.MultisetAlgebraSpec
@@ -105,6 +106,13 @@ main = do
                      Stage1.Polynumber.auditPolyStreamRoundTripProof &&
                      Stage1.Polynumber.auditPolyTreeEquivalenceProof
   printTestResult "Polynumber Support, StreamPolynumber Round-Trip & BoxSpecTree Duality" pPolyDuality
+
+  let pDepPoly = Stage1.Polynumber.auditDepPolyDiffProof &&
+                 Stage1.Polynumber.auditDepPolyMulProof
+  printTestResult "Degree-Certified DepPolynumber Formal Derivation & Multi-Spread" pDepPoly
+
+  let pPrimeTree = Stage1.MultisetTree.auditPrimeMultisetTreeProof
+  printTestResult "Constructive GohPrime FusedStream & O(log N) MultisetTree" pPrimeTree
 
   putStrLn "========================================================"
   putStrLn "  ✨ ALL FINSC-MULTISET KERNEL WITNESSES PASSED ✨  "
