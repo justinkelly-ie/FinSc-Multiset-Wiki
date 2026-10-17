@@ -1,8 +1,8 @@
 module Wiki.CoreMacroAudit
 
 import Stage0.BoxInt
-import Stage0.BoxInt
 import Stage0.Multiset
+import Stage0.PrimeMultiset
 import Language.Reflection
 
 %default total
@@ -51,13 +51,26 @@ auditBoxIntRingHomomorphism : Elab (CoreMacroAudit.auditBoxIntRingHomomorphismPr
 auditBoxIntRingHomomorphism = auditWitness auditBoxIntRingHomomorphismProof
 
 public export
+auditDyadicPrimeFixedPointProof : Bool
+auditDyadicPrimeFixedPointProof =
+  let _ = gohDyadicFixedPoint
+  in True
+
+public export
+%macro
+auditDyadicPrimeFixedPoint : Elab (CoreMacroAudit.auditDyadicPrimeFixedPointProof = True)
+auditDyadicPrimeFixedPoint = auditWitness auditDyadicPrimeFixedPointProof
+
+public export
 coreMacroWitnesses : List Bool
 coreMacroWitnesses =
   [ auditBoxIntDiracProof
   , auditBoxIntRingHomomorphismProof
+  , auditDyadicPrimeFixedPointProof
   ]
 
 public export
 %macro
 auditCoreMacroCatalog : Elab (allTrue CoreMacroAudit.coreMacroWitnesses = True)
 auditCoreMacroCatalog = auditCatalogWitnesses coreMacroWitnesses
+
