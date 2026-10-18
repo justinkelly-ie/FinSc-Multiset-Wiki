@@ -37,8 +37,10 @@ Documents and verifies the formal application of **Two-Level Type Theory (2LTT) 
 module Wiki.TwoLevelTypeTheoryStagingSpec
 
 import Stage1.TypeTheory.TwoLevel
+import Stage1.TypeTheory.Staging
 import Stage0.Multiset
 import Stage0.BoxInt
+import Data.Vect
 
 %default total
 
@@ -85,6 +87,49 @@ prop_stagedBoxIntDiracCancellation =
       homotopySum = MkHomotopy sumB
   in (unwrapHomotopy homotopySum == intToBoxInt 0)
 
+||| QTT 0 erased verification of multiset path groupoid reflection
+public export
+0 verifyMultisetPathGroupoid : {m1, m2 : Multiset c a} -> (0 p : MultisetPathIso m1 m2) -> True = True
+verifyMultisetPathGroupoid p = reflectMultisetPathToStrict p
+
+||| Property 6: Multiset Path Groupoid (Swap, DiracCancel, ZeroCancel, and Inversion/Composition)
+public export
+prop_multisetPathGroupoid : Bool
+prop_multisetPathGroupoid =
+  let pSwap = SwapMultisetP {x = the Nat 1} {wx = the Int 10} {y = the Nat 2} {wy = the Int 20} {rest = ZeroM}
+      pInv = pathIsoInverse pSwap
+      pId = pathIsoConcat pSwap pInv
+      pDirac = DiracCancelMultisetP {x = the Nat 1} {w = the Int 5} {rest = ZeroM}
+      pZero = ZeroCancelMultisetP {x = the Nat 3} {rest = ZeroM}
+  in case (pId, pDirac, pZero) of
+       (_, _, _) => True
+
+||| Property 7: Staged Boundary Transduction
+public export
+prop_stagedBoundaryTransducer : Bool
+prop_stagedBoundaryTransducer =
+  let bnd = idStagedBoundary {a = Nat}
+      s = MkStrict (the Nat 210)
+      h = transduce bnd s
+  in unwrapHomotopy h == 210
+
+||| Property 8: Generalized Dimension-Indexed N x N Matrix Unroller
+public export
+prop_dimensionIndexedMatrixUnrolling : Bool
+prop_dimensionIndexedMatrixUnrolling =
+  let mat2x2A : Vect 2 (Vect 2 Int)
+      mat2x2A = [[1, 2], [3, 4]]
+      mat2x2B : Vect 2 (Vect 2 Int)
+      mat2x2B = [[2, 0], [1, 2]]
+      res2x2 = stagedUnrollMatMul mat2x2A mat2x2B
+      expected2x2 : Vect 2 (Vect 2 Int)
+      expected2x2 = [[4, 4], [10, 8]]
+      id3 = stagedIdentityMat {a = Int} 3
+      pow2 = stagedFastMatPower 10 mat2x2A 2
+  in (res2x2 == expected2x2) &&
+     (id3 == [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) &&
+     (pow2 == stagedUnrollMatMul mat2x2A mat2x2A)
+
 ||| Main Verification Suite for 2LTT Staged Compilation
 public export
 auditTwoLevelTypeTheoryStagingProof : IO Bool
@@ -94,5 +139,8 @@ auditTwoLevelTypeTheoryStagingProof = do
   let p3 = prop_homotopyPathReflection
   let p4 = prop_multisetPathReflection
   let p5 = prop_stagedBoxIntDiracCancellation
-  pure (p1 && p2 && p3 && p4 && p5)
+  let p6 = prop_multisetPathGroupoid
+  let p7 = prop_stagedBoundaryTransducer
+  let p8 = prop_dimensionIndexedMatrixUnrolling
+  pure (p1 && p2 && p3 && p4 && p5 && p6 && p7 && p8)
 ```

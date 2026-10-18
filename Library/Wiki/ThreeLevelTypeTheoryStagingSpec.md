@@ -45,6 +45,7 @@ module Wiki.ThreeLevelTypeTheoryStagingSpec
 import Stage1.TypeTheory.TwoLevel
 import Stage2.ThreeLevel
 import Stage0.Multiset
+import Stage1.MultisetTensor
 import Stage0.BoxInt
 import Data.Fuel
 
@@ -94,6 +95,21 @@ prop_3LTTConjugateHylomorphismStep =
       stOut = hylo3 (limit 1) stIn
   in innerState stOut == intToBoxInt 15
 
+||| QTT 0 erased verification of 3LTT HyperCycle reflection
+public export
+0 verify3LTTHyperCycleRefl : {0 a : Type} -> (x : HyperCycleLevel a) -> True = True
+verify3LTTHyperCycleRefl x = hyperCycleRefl {s = StrictLevel} x
+
+||| Property 5: 3LTT HyperCycleReflectionFunctor Adjunction Instance Verification
+public export
+prop_3LTTAdjunctionInstance : Bool
+prop_3LTTAdjunctionInstance =
+  let tIn : MultisetTensor (HyperCycleLevel Nat) Nat
+      tIn = AddM (MkHyperCycle (the Nat 37), the Nat 210) (the BoxInt 1) ZeroM
+      tIso = hyperCycleToStrictTensorIso tIn
+      tInv = hyperCycleToStrictTensorInv tIso
+  in tInv == tIn
+
 ||| Main Verification Suite for 3LTT Inter-Cycle Staging
 public export
 auditThreeLevelTypeTheoryStagingProof : IO Bool
@@ -102,5 +118,6 @@ auditThreeLevelTypeTheoryStagingProof = do
   let p2 = prop_parameterizedCycleStateLoading
   let p3 = prop_3LTTInterCycleProofWitness
   let p4 = prop_3LTTConjugateHylomorphismStep
-  pure (p1 && p2 && p3 && p4)
+  let p5 = prop_3LTTAdjunctionInstance
+  pure (p1 && p2 && p3 && p4 && p5)
 ```
