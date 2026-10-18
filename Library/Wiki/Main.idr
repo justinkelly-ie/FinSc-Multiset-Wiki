@@ -4,6 +4,7 @@ import Stage0.Interfaces
 import Stage0.Multiset
 import Stage0.BoxInt
 import Stage0.Singleton.Bit
+import Stage0.PrimeMultiset
 import Stage0.StreamPolynumber
 import Stage1.Polynumber
 import Stage1.MultisetTree
@@ -113,6 +114,9 @@ main = do
 
   let pPrimeTree = Stage1.MultisetTree.auditPrimeMultisetTreeProof
   printTestResult "Constructive GohPrime FusedStream & O(log N) MultisetTree" pPrimeTree
+
+  let pGohSpectrum = Stage0.PrimeMultiset.auditGohSpectrumClassification
+  printTestResult "Constructivist Goh Spectrum Classification, Dyadic Fixed Point (2+2=4) & Lattices" pGohSpectrum
 
   putStrLn "========================================================"
   putStrLn "  ✨ ALL FINSC-MULTISET KERNEL WITNESSES PASSED ✨  "
