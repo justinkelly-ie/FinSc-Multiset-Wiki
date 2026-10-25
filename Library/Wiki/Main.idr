@@ -15,6 +15,7 @@ import Wiki.BoxIntAlgebraSpec
 import Wiki.BitGateChannelSpec
 import Wiki.LinearResourceChannelSpec
 import Wiki.DependentMultisetSpec
+import Wiki.FractionHomomorphismSpec
 import Wiki.MonoidApplicativeAdjunctionSpec
 import Wiki.FusedStreamAlgebraSpec
 import Wiki.TwoLevelTypeTheoryStagingSpec
@@ -75,6 +76,9 @@ main = do
 
   p3 <- auditBoxIntAlgebraProof
   printTestResult "BoxInt Ring Homomorphism, Abs Metric & Refinement (QuickCheck)" p3
+
+  pFrac <- auditFractionHomomorphismProof
+  printTestResult "Fraction Functorial Homomorphisms & Round-Trip Bridge (QuickCheck)" pFrac
 
   p4 <- auditBitGateChannelProof
   printTestResult "F2 Bit Field Homomorphisms & Comonoid Channels (QuickCheck)" p4
