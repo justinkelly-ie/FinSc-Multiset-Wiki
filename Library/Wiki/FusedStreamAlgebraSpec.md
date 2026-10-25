@@ -25,14 +25,14 @@ public export
 prop_fusedStreamAssociative : Bool
 prop_fusedStreamAssociative =
   let
-    m1 = MkMaxel 1 2 Elliptic
-    m2 = MkMaxel 2 1 Elliptic
-    m3 = MkMaxel 1 2 Elliptic
+    m1 = MkGeometricPixel 1 2 Elliptic
+    m2 = MkGeometricPixel 2 1 Elliptic
+    m3 = MkGeometricPixel 1 2 Elliptic
     s1 = stream [m1]
     s2 = stream [m2]
     s3 = stream [m3]
-    lhs = unstreamToMap substrateFuel (multiplyMaxels (multiplyMaxels s1 s2) s3)
-    rhs = unstreamToMap substrateFuel (multiplyMaxels s1 (multiplyMaxels s2 s3))
+    lhs = unstreamToMap substrateFuel (multiplyGeometricPixels (multiplyGeometricPixels s1 s2) s3)
+    rhs = unstreamToMap substrateFuel (multiplyGeometricPixels s1 (multiplyGeometricPixels s2 s3))
   in
     Data.SortedMap.toList lhs == Data.SortedMap.toList rhs
 
@@ -64,7 +64,7 @@ public export
 prop_fueledStreamEvaluation : Bool
 prop_fueledStreamEvaluation =
   let
-    m1 = MkMaxel 1 2 Elliptic
+    m1 = MkGeometricPixel 1 2 Elliptic
     strm = stream [m1]
     resDry = runFueledStream Dry strm
     resLimit = runFueledStream (limit 10) strm
@@ -76,11 +76,11 @@ public export
 prop_streamCombinatorSuite : Bool
 prop_streamCombinatorSuite =
   let
-    m1 = MkMaxel 1 2 Elliptic
-    m2 = MkMaxel 2 3 Hyperbolic
+    m1 = MkGeometricPixel 1 2 Elliptic
+    m2 = MkGeometricPixel 2 3 Hyperbolic
     strm = stream [m1, m2]
     mapped = mapStream (\m => source m + target m) strm
-    filtered = filterStream (\m => sector m == Elliptic) strm
+    filtered = filterStream (\m => geometry m == Elliptic) strm
     folded = foldStream (+) 0 mapped
     resMapped = runFueledStream substrateFuel mapped
     resFiltered = runFueledStream substrateFuel filtered

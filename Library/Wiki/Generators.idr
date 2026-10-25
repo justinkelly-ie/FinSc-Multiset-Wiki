@@ -3,6 +3,8 @@ module Wiki.Generators
 import public QuickCheck
 import Stage0.Interfaces
 import Stage0.BoxInt
+import Stage0.BoxNat
+import Stage0.DiffInt
 import Stage0.Singleton.Bit
 import Stage0.Multiset
 
@@ -12,6 +14,19 @@ public export
 Arbitrary BoxInt where
   arbitrary = map MkBoxInt arbitrary
   coarbitrary b gen = coarbitrary (unwrapBox b) gen
+
+public export
+Arbitrary BoxNat where
+  arbitrary = map (MkBoxNat . integerToNat . abs) arbitrary
+  coarbitrary b gen = coarbitrary (cast {to=Integer} (unwrapBoxNat b)) gen
+
+public export
+Arbitrary DiffInt where
+  arbitrary = do
+    p <- arbitrary {a=BoxNat}
+    n <- arbitrary {a=BoxNat}
+    pure (MkDiffInt p n)
+  coarbitrary (MkDiffInt p n) gen = coarbitrary (cast {to=Integer} (unwrapBoxNat p), cast {to=Integer} (unwrapBoxNat n)) gen
 
 public export
 qcBit : (Bit -> Bool) -> QCRes

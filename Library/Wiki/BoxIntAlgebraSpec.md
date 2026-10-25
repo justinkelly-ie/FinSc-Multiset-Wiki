@@ -15,7 +15,8 @@ Documents and verifies discrete `BoxInt` **Ring Homomorphisms** $\phi : (\text{B
 module Wiki.BoxIntAlgebraSpec
 
 import Stage0.BoxInt
-import Stage0.BoxInt
+import Stage0.BoxNat
+import Stage0.DiffInt
 import Stage0.Interfaces
 import Data.Linear
 import Wiki.Generators
@@ -81,6 +82,22 @@ public export
 prop_lEqBoxIntChannel : BoxInt -> Bool
 prop_lEqBoxIntChannel bx = boxLTE bx bx
 
+||| Property 8: BoxIntView Inductive Sign-Magnitude Round-Trip
+public export
+prop_boxIntViewRoundTrip : BoxInt -> Bool
+prop_boxIntViewRoundTrip bx =
+  boxIntViewToBoxInt (boxIntView bx) == bx
+
+||| Property 9: DiffInt 2LTT Reflection Bridge Homomorphisms & Retraction
+public export
+prop_diffIntReflectionBridge : DiffInt -> DiffInt -> Bool
+prop_diffIntReflectionBridge d1 d2 =
+  auditDiffToBoxAddHom d1 d2 &&
+  auditDiffToBoxMulHom d1 d2 &&
+  auditDiffToBoxNegHom d1 &&
+  auditDiffRoundTripEquiv d1 &&
+  auditDiffRoundTripEquiv d2
+
 ||| QuickCheck suite execution for BoxInt Algebra specification
 public export
 auditBoxIntAlgebraProof : IO Bool
@@ -92,6 +109,9 @@ auditBoxIntAlgebraProof = do
   let r4 = qc prop_boxAbsMetric
   let r5 = qc prop_nonZeroRefinementFilter
   let r6 = qc prop_lEqBoxIntChannel
+  let r7 = qc prop_boxIntViewRoundTrip
+  let r8 = qc2 prop_diffIntReflectionBridge
   pure (r0.pass == Just True && r1.pass == Just True && r2.pass == Just True &&
-        r3.pass == Just True && r4.pass == Just True && r5.pass == Just True && r6.pass == Just True)
+        r3.pass == Just True && r4.pass == Just True && r5.pass == Just True &&
+        r6.pass == Just True && r7.pass == Just True && r8.pass == Just True)
 ```
