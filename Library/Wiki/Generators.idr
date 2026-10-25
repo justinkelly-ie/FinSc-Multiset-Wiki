@@ -45,7 +45,7 @@ Arbitrary UnixelFraction where
     n <- arbitrary {a=BoxInt}
     d <- arbitrary {a=BoxNat}
     pure (mkUnixelFraction n (S (unwrapBoxNat d)))
-  coarbitrary (MkUnixelFraction n (MkUnixel d)) gen = coarbitrary (unwrapBox n, cast {to=Integer} d) gen
+  coarbitrary (MkUnixelFraction n u) gen = coarbitrary (unwrapBox n, cast {to=Integer} (unwrapUnixel u)) gen
 
 public export
 qcBit : (Bit -> Bool) -> QCRes
